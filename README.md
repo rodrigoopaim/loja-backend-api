@@ -32,9 +32,9 @@ Uma API REST para gerenciamento de estoque, desenvolvida com **Node.js** e **Pos
    cd estoque-backend-api
 
 2. **Instale as dependências:**
-  ```bash
-  npm install
-```
+   ```bash
+   npm install
+   ```
 
 3. **Configure o Ambiente:**
 Crie um arquivo .env na raiz do projeto e preencha suas credenciais:
@@ -42,16 +42,16 @@ Exemplo base do arquivo .env:
 
 
 **env**
-```bash
-CONNECTION_STRING=postgresql://usuario:senha@host:porta/nome_do_banco
-PORT=3000
-```
+   ```bash
+   CONNECTION_STRING=postgresql://usuario:senha@host:porta/nome_do_banco
+   PORT=3000
+   ```
 
 
 5. **Inicie o servidor:**
-  ```bash
-  npm start
-```
+   ```bash
+   npm start
+   ```
 O servidor iniciará na porta 3000 por padrão.
 
 
@@ -68,14 +68,14 @@ O servidor iniciará na porta 3000 por padrão.
 
 Exemplo de Requisição (Atualizar Produto)
 
-PUT /produtos/1
+PATCH /produtos/1
 
-```json
-{
-  "nome": "Teclado Mecânico RGB",
-  "preco": 299.90
-}
-```
+   ```json
+   {
+     "nome": "Teclado Mecânico RGB",
+     "preco": 299.90
+   }
+   ```
 
 
 Desenvolvido por Rodrigo O. Paim
