@@ -26,10 +26,15 @@ async function deletarProduto(id) {
     const sql = "DELETE FROM produtos WHERE id=$1;";
     const res = await pool.query(sql, [id]);
 }
-async function atualizarProduto(id, nome, preco, ativo) {
+async function atualizarProduto(id, nome, preco) {
     const pool = await db.connect();
-    const sql = "UPDATE produtos SET nome=$1, preco=$2, ativo=$3 WHERE id=$4;";
-    const res = await pool.query(sql, [nome, preco, ativo, id]);
+    const sql = "UPDATE produtos SET nome=$1, preco=$2 WHERE id=$3;";
+    const res = await pool.query(sql, [nome, preco, id]);
+}
+async function atualizarProdutoAtv(id, ativo) {
+    const pool = await db.connect();
+    const sql = "UPDATE produtos SET ativo=$1 WHERE id=$2;";
+    const res = await pool.query(sql, [ativo, id]);
 }
 
 module.exports = {
@@ -38,5 +43,6 @@ module.exports = {
     listarProdutosAtv,
     adicionarProduto,
     deletarProduto,
-    atualizarProduto
+    atualizarProduto,
+    atualizarProdutoAtv
 };
