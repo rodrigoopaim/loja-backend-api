@@ -1,6 +1,6 @@
-# estoque-backend-api 🚀
+# loja-backend-api 🚀
 
-Uma API REST para gerenciamento de estoque, desenvolvida com **Node.js** e **PostgreSQL**. O projeto foca em operações CRUD essenciais com validações de integridade de dados.
+Uma API REST para gerenciamento de estoque e pedido, desenvolvida com **Node.js** e **PostgreSQL**. O projeto foca em operações CRUD essenciais com validações de integridade de dados.
 
 ## 🛠 Tecnologias Utilizadas
 
