@@ -44,10 +44,11 @@ async function adicionarItemPedido(req, res) {
             return res.status(400).json({erro: "Status do produto desativado"});
         }
         const preco = produto.preco;
+        listPedido.total += preco*quantidade; 
+        const atualizarPedido = await pedidoModels.atualizarPedido(idPedido, listPedido.status, listPedido.total, listPedido.data_criacao);
         const addItemPedido = await pedidoModels.adicionarItemPedido(idPedido, produto_id, quantidade, preco);
         return res.sendStatus(200);
     } catch (error) {
-        console.log(error);
         return res.sendStatus(400);
     }
 }

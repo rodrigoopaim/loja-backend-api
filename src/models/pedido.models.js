@@ -18,6 +18,11 @@ async function listarPedido(id) {
     const res = await pool.query(sql, [id]);
     return res.rows;
 }
+async function atualizarPedido(idPedido, st, total, data_criacao) {
+    const pool = await db.connect();
+    const sql = "UPDATE pedidos SET status=$1, total=$2, data_criacao=$3 WHERE id=$4;";
+    const res = await pool.query(sql, [st, total, data_criacao, idPedido]);
+}
 async function adicionarItemPedido(idPedido, idItem, quantidade, preco) {
     const pool = await db.connect();
     const sql = "INSERT INTO itens_pedido(pedido_id, produto_id, quantidade, preco_unitario) " + 
@@ -29,5 +34,6 @@ module.exports = {
     criarPedido,
     listarPedidos,
     listarPedido,
+    atualizarPedido,
     adicionarItemPedido
 }
