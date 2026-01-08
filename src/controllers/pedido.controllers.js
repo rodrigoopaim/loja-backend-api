@@ -5,9 +5,9 @@ async function criarPedido(req, res) {
     const data = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-");
     try {
         const criaPedido = await pedidoModels.criarPedido('aberto', 0, data);
-        res.sendStatus(200);
+        return res.sendStatus(200);
     } catch (error) {
-        res.status(500).json({erro: "Erro ao criar pedido"});
+        return res.status(500).json({erro: "Erro ao criar pedido"});
     }
 }
 async function listarPedidos(req, res) {
@@ -20,7 +20,7 @@ async function listarPedidos(req, res) {
 }
 async function listarPedido(req, res) {
     try {
-        const id = req.params.id;
+        const id = Number(req.params.id);
         const listPedido = await pedidoModels.listarPedido(id);
         return res.status(200).json(listPedido);
     } catch (error) {
@@ -28,7 +28,7 @@ async function listarPedido(req, res) {
     }
 }
 async function adicionarItemPedido(req, res) {
-    const idPedido = req.params.id;
+    const idPedido = Number(req.params.id);
     const {produto_id, quantidade} = req.body;
     try {
         const [listPedido] = await pedidoModels.listarPedido(idPedido);
@@ -52,10 +52,20 @@ async function adicionarItemPedido(req, res) {
         return res.sendStatus(400);
     }
 }
+async function listarItensPedido(req, res) {
+    const idPedido = Number(req.params.id);
+    try {
+        const listItePedido = await pedidoModels.listarItensPedido(idPedido);
+        return res.status(200).json(listItePedido);
+    } catch (error) {
+        return res.status(500).json({ erro: "Erro ao listar pedido" });
+    }
+}
 
 module.exports = {
     criarPedido,
     listarPedidos,
     listarPedido,
-    adicionarItemPedido
+    adicionarItemPedido,
+    listarItensPedido
 }

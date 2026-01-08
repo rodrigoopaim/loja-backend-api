@@ -6,5 +6,6 @@ router.post("/", pedidoController.criarPedido);
 router.get("/", pedidoController.listarPedidos);
 router.get("/:id", pedidoController.listarPedido);
 router.post("/:id/itens", pedidoController.adicionarItemPedido);
+router.get("/:id/itens", pedidoController.listarItensPedido);
 
 module.exports = router;
