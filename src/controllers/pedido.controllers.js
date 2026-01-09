@@ -61,11 +61,30 @@ async function listarItensPedido(req, res) {
         return res.status(500).json({ erro: "Erro ao listar pedido" });
     }
 }
+async function deletarItemPedido(req, res) {
+    const idPedido = Number(req.params.id);
+    const idItem = Number(req.params.idItem);
+    try {
+        const [listItePedido] = await pedidoModels.listarItensPedido(idPedido);
+        const {id, preco} = listItePedido;
+        if(id != idItem){
+            return res.status(400).json({erro: "Item não listado no Pedido"});
+        }
+        const [listarPedido] = await pedidoModels.listarPedido(idPedido);
+        listarPedido.total -= preco;
+        const delItePedido = await pedidoModels.deletarItemPedido(idPedido, idItem);
+        const atualizarPedido = await pedidoModels.atualizarPedido(idPedido, listarPedido.status, listarPedido.total, listarPedido.data_criacao);
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.status(500).json({ erro: "Erro ao deletar produto" });
+    }
+}
 
 module.exports = {
     criarPedido,
     listarPedidos,
     listarPedido,
     adicionarItemPedido,
-    listarItensPedido
+    listarItensPedido,
+    deletarItemPedido
 }

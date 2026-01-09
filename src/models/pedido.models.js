@@ -31,10 +31,15 @@ async function adicionarItemPedido(idPedido, idItem, quantidade, preco) {
 }
 async function listarItensPedido(idPedido) {
     const pool = await db.connect();
-    const sql = "SELECT pro.* FROM produtos pro join itens_pedido ite on pro.id=ite.produto_id " + 
-    "join pedidos ped on ped.id=ite.pedido_id WHERE ped.id=$1;";
+    const sql = "SELECT pro.* FROM produtos pro JOIN itens_pedido ite ON pro.id=ite.produto_id " + 
+    "JOIN pedidos ped ON ped.id=ite.pedido_id WHERE ped.id=$1;";
     const res = await pool.query(sql, [idPedido]);
     return res.rows;
+}
+async function deletarItemPedido(idPedido, idItem) {
+    const pool = await db.connect();
+    const sql = "DELETE FROM itens_pedido WHERE produto_id=$1 AND pedido_id=$2;";
+    const res = await pool.query(sql, [idItem, idPedido]);
 }
 
 module.exports = {
@@ -43,5 +48,6 @@ module.exports = {
     listarPedido,
     atualizarPedido,
     adicionarItemPedido,
-    listarItensPedido
+    listarItensPedido,
+    deletarItemPedido
 }
