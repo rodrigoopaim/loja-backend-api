@@ -31,15 +31,27 @@ async function adicionarItemPedido(idPedido, idItem, quantidade, preco) {
 }
 async function listarItensPedido(idPedido) {
     const pool = await db.connect();
-    const sql = "SELECT pro.* FROM produtos pro JOIN itens_pedido ite ON pro.id=ite.produto_id " + 
+    const sql = "SELECT pro.id, pro.nome, pro.preco, ite.quantidade FROM produtos pro JOIN itens_pedido ite ON pro.id=ite.produto_id " + 
     "JOIN pedidos ped ON ped.id=ite.pedido_id WHERE ped.id=$1;";
     const res = await pool.query(sql, [idPedido]);
+    return res.rows;
+}
+async function listarItemPedido(idPedido, idItem) {
+    const pool = await db.connect();
+    const sql = "SELECT pro.id, pro.nome, pro.preco, ite.quantidade FROM produtos pro JOIN itens_pedido ite ON pro.id=ite.produto_id " + 
+    "JOIN pedidos ped ON ped.id=ite.pedido_id WHERE ped.id=$1 AND pro.id=$2;";
+    const res = await pool.query(sql, [idPedido, idItem]);
     return res.rows;
 }
 async function deletarItemPedido(idPedido, idItem) {
     const pool = await db.connect();
     const sql = "DELETE FROM itens_pedido WHERE produto_id=$1 AND pedido_id=$2;";
     const res = await pool.query(sql, [idItem, idPedido]);
+}
+async function atualizarQuantidadeItemPedido(idPedido, idItem, quantidade) {
+    const pool = await db.connect();
+    const sql = "UPDATE itens_pedido SET quantidade=$1 WHERE pedido_id=$2 AND produto_id=$3;";
+    const res = await pool.query(sql, [quantidade, idPedido, idItem])
 }
 
 module.exports = {
@@ -49,5 +61,7 @@ module.exports = {
     atualizarPedido,
     adicionarItemPedido,
     listarItensPedido,
-    deletarItemPedido
+    listarItemPedido,
+    deletarItemPedido,
+    atualizarQuantidadeItemPedido
 }
