@@ -8,7 +8,9 @@ router.get("/:id", pedidoController.listarPedido);
 router.post("/:id/itens", pedidoController.adicionarItemPedido);
 router.get("/:id/itens", pedidoController.listarItensPedido); 
 router.get("/:id/itens/:idItem", pedidoController.listarItemPedido); 
-router.delete("/:id/itens/:idItem", pedidoController.deletarItemPedido);
+router.delete("/:id/itens/:idItem", pedidoController.deletarItemPedido); 
 router.patch("/:id/itens/:idItem", pedidoController.atualizarQuantidadeItemPedido);
+router.patch("/:id/finalizar", pedidoController.finalizarPedido);
+router.patch("/:id/cancelar", pedidoController.cancelarPedido);
 
 module.exports = router;

@@ -36,11 +36,11 @@ async function adicionarItemPedido(req, res) {
         if(!listPedido){
             return res.status(400).json({erro: "Pedido inexistente"});
         } else if (listPedido.status === "cancelado" || listPedido.status === "finalizado"){
-            return res.status.json({erro: "Status do Pedido fechado para alterações"});
+            return res.status(400).json({erro: "Status do Pedido fechado para alterações"});
         }
         if(!produto){
             return res.status(400).json({erro: "Produto inexistente"});
-        } else if(produto.status === false){
+        } else if(produto.ativo === false){
             return res.status(400).json({erro: "Status do produto desativado"});
         }
         const preco = produto.preco;
@@ -75,13 +75,11 @@ async function deletarItemPedido(req, res) {
     const idPedido = Number(req.params.id);
     const idItem = Number(req.params.idItem);
     try {
-        const itensPedido = await pedidoModels.listarItemPedido(idPedido, idItem);
-        if (!itensPedido.length) {
+        const [itensPedido] = await pedidoModels.listarItemPedido(idPedido, idItem);
+        if (!itensPedido) {
             return res.status(400).json({ erro: "Produto não encontrado no pedido" });
         }
-        const totalItem = itensPedido.reduce((soma, item) => {
-            return soma + Number(item.preco);
-        }, 0);
+        const totalItem = itensPedido.preco * itensPedido.quantidade;
         const [pedido] = await pedidoModels.listarPedido(idPedido);
         pedido.total -= totalItem;
         if (pedido.total < 0) {
@@ -101,7 +99,6 @@ async function atualizarQuantidadeItemPedido(req, res) {
     try {
         const [pedido] = await pedidoModels.listarPedido(idPedido);
         const [listItePedido] = await pedidoModels.listarItemPedido(idPedido, idItem);
-        console.log(listItePedido);
         if(!listItePedido) {
             return res.status(400).json({erro: "Produto não encontrado no pedido"});
         } 
@@ -114,6 +111,38 @@ async function atualizarQuantidadeItemPedido(req, res) {
         return res.status(500).json({erro: "Não foi possível atualizar o item"});
     }
 }
+async function finalizarPedido(req, res) {
+    const id = Number(req.params.id);
+    try {
+        const [pedido] = await pedidoModels.listarPedido(id);
+        const {status, total, data_criacao} = pedido;
+        if(status === "finalizado"){
+            return res.status(400).json({erro: "Pedido já está finalizado"});
+        } else if(status === "cancelado"){
+            return res.status(400).json({erro: "Pedido não pode ser finalizado"});
+        }
+        await pedidoModels.atualizarPedido(id, 'finalizado', total, data_criacao);
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.status(500).json({erro: "Não foi possível finalizar o pedido"});
+    }
+}
+async function cancelarPedido(req, res) {
+    const id = Number(req.params.id);
+    try {
+        const [pedido] = await pedidoModels.listarPedido(id);
+        const {status, total, data_criacao} = pedido;
+        if(status === "cancelado"){
+            return res.status(400).json({erro: "Pedido já está cancelado"});
+        } else if(status === "aberto"){
+            return res.status(400).json({erro: "Pedido aberto, não pode ser cancelado"});
+        }
+        await pedidoModels.atualizarPedido(id, 'cancelado', total, data_criacao);
+        return res.sendStatus(200);
+    } catch (error) {
+        return res.status(500).json({erro: "Não foi possível finalizar o pedido"});
+    }
+}
 
 module.exports = {
     criarPedido,
@@ -123,5 +152,7 @@ module.exports = {
     listarItensPedido,
     listarItemPedido,
     deletarItemPedido,
-    atualizarQuantidadeItemPedido
+    atualizarQuantidadeItemPedido,
+    finalizarPedido,
+    cancelarPedido
 }

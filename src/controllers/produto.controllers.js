@@ -95,7 +95,6 @@ async function atualizarProdutoAtv(req, res) {
         } else {
             return res.status(400).json({erro: "Ação Inválida"})
         }
-        console.log(parametro);
         const atuProdAtv = await produtoModel.atualizarProdutoAtv(id, parametro);
         return res.sendStatus(200);
     } catch (error) {
